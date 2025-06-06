@@ -1,1 +1,6 @@
+__pycache__/
 config.py
+.flaskenv
+app.db
+flask_session/
+.vscode/
