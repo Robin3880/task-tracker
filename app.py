@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 from config import Config
 from flask_session import Session
 from database import get_db, close_db 
@@ -12,3 +12,7 @@ app.config.from_object(Config)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+@app.route("/")
+def index():
+    return render_template("index.html")

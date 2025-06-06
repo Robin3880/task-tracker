@@ -1,0 +1,27 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+main {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    height: 100vh; 
+}
+
+#to-do {
+    background-color: rgb(0, 89, 255);
+}
+#doing {
+    background-color: orange;
+}
+#done {
+    background-color: green;
+}
+
+section {
+    padding: 2em;
+}
+h1 {
+    color: white;
+}
