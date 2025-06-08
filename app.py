@@ -74,3 +74,9 @@ def login():
                 next_page = url_for("index")
             return redirect(next_page)
     return render_template("login.html", form=form)
+
+@app.route("/logout", methods=["POST", "GET"])
+def logout():
+    session.clear()
+    session.modified = True
+    return redirect(url_for("login"))

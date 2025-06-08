@@ -6,9 +6,12 @@
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 </head>
 <body>
+    {% if g.user%}
     <header>
-
+        <a href="{{url_for('index')}}">home</a>
+        <a href="{{url_for('logout')}}">logout</a>
     </header>
+    {% endif %}
 
     {% block main_content %}
     {% endblock %}

@@ -25,3 +25,15 @@ section {
 h1 {
     color: white;
 }
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 1em;
+    background-color: gray; 
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
