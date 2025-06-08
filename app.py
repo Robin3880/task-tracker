@@ -75,7 +75,7 @@ def login():
             return redirect(next_page)
     return render_template("login.html", form=form)
 
-@app.route("/logout", methods=["POST", "GET"])
+@app.route("/logout")
 def logout():
     session.clear()
     session.modified = True

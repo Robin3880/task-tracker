@@ -8,8 +8,11 @@
 <body>
     {% if g.user%}
     <header>
-        <a href="{{url_for('index')}}">home</a>
+        <a href="{{url_for('index')}}">main&#9662;</a>
+        <nav>
+        <a href="">new page</a>
         <a href="{{url_for('logout')}}">logout</a>
+        </nav>
     </header>
     {% endif %}
 
