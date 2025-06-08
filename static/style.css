@@ -40,3 +40,21 @@ a {
 nav a {
     margin-left: 2em;
 }
+input {
+    display: block
+}
+
+.card {
+    border-radius: 0.5em;
+    background-color: white;
+    padding: 1em;
+    width: 6em;
+    margin-bottom: 0.5em;
+}
+h2 {
+    margin: 0;
+}
+.card p {
+    white-space: normal;  /* allow wrapping */
+    word-wrap: break-word;
+}
