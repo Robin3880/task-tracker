@@ -14,9 +14,10 @@ CREATE TABLE users
 --     id INTEGER PRIMARY KEY,
 --     title TEXT NOT NULL,
 --     created_by INTEGER,
+--     password?
 --     FOREIGN KEY (created_by) REFERENCES users(id)
 -- );
-
+DROP TABLE IF EXISTS cards;
 CREATE TABLE cards (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT,
@@ -25,3 +26,6 @@ CREATE TABLE cards (
 --  created_by INTEGER,
 --  FOREIGN KEY (created_by) REFERENCES users(id)
 );
+
+
+SELECT * FROM cards;

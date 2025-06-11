@@ -34,6 +34,31 @@ def login_required(view):
 def index():
     return render_template("index.html")
 
+
+@app.route("/save", methods = ["POST","GET"])
+def save():
+    cards = request.get_json()
+    db = get_db()
+
+    #delete all cards no longer there
+    current_ids = set([card["id"] for card in cards if card["id"] != ""])
+    database_ids = set((card["id"] for card in db.execute('''SELECT id FROM cards''').fetchall()))
+    difference = database_ids - current_ids
+    for id in difference:
+        db.execute('''DELETE FROM cards WHERE id = ?''',(id,))
+
+    #update all cards that changed 
+    for card in cards:
+        if card["id"] != "": 
+            row = db.execute('SELECT title, description, status FROM cards WHERE id = ?', (card["id"],)).fetchone()
+            if row and (row["title"] != card["title"] or row["description"] != card["description"] or row["status"] != card["status"]):
+                db.execute('''UPDATE cards SET title = ?, description = ?, status = ? WHERE id = ?''',(card["title"], card["description"], card["status"], card["id"]))
+        else:
+            # new cards (new id)
+            db.execute('''INSERT INTO cards ('title', 'description', 'status') VALUES (?,?,?)''',(card["title"], card["description"], card["status"]))
+    db.commit() 
+    return "success"
+    
 @app.route("/register", methods = ["POST","GET"])
 def register():
     form = RegisterForm()

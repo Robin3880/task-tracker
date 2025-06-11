@@ -1,9 +1,11 @@
-
+let xhttp;
 const new_button = document.querySelector("#new");
+const save_button = document.querySelector("#save");
 const to_do = document.querySelector("#to-do");
 const doing = document.querySelector("#doing");
 const done = document.querySelector("#done");
 new_button.addEventListener("click", createCard);
+save_button.addEventListener("click", save);
 
 function createCard() {
     const card = document.createElement("div");
@@ -20,7 +22,7 @@ function createCard() {
     description.innerHTML = "description";
     description.contentEditable = "true";
     mark_doing.innerHTML = "mark as doing";
-    mark_doing.addEventListener("click", markDoing);
+    mark_doing.addEventListener("click", markDoing); 
 }
 
 function markDoing(event) {
@@ -36,4 +38,39 @@ function markDone(event) {
     const card = mark_done.parentElement;
     done.append(card);
     card.removeChild(mark_done);
+}
+
+function save() { 
+    console.log("test");
+    let cards = [];
+    let card_elements = document.querySelectorAll(".card");
+    for (let el of card_elements) {
+        let card = {
+            id: el.id,
+            title: el.querySelector("h2").innerText,
+            description: el.querySelector("p").innerText,
+            status: el.parentElement.id
+        }
+        cards.push(card);
+        console.log(card)
+    }
+    const jsonData = JSON.stringify(cards);
+
+    xhttp = new XMLHttpRequest();
+    xhttp.addEventListener("readystatechange", handle_response, false);
+    xhttp.open("POST", "/save", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.send(jsonData);
+    
+}
+function handle_response() {
+    if (xhttp.readyState === 4) {
+        if (xhttp.status === 200) {
+            if (xhttp.responseText === "success") {
+                console.log("success");
+            } else {
+                console.log("not successful");
+            }
+        }
+    }
 }
