@@ -31,8 +31,13 @@ header {
     justify-content: space-between;
     padding: 1em;
     background-color: gray; 
+    height: 4em;
+    align-items: center;
 }
-
+div {
+    display: flex;
+    align-items: center;
+}
 a {
     color: white;
     text-decoration: none;

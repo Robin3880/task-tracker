@@ -1,6 +1,7 @@
 let xhttp;
 const new_button = document.querySelector("#new");
 const save_button = document.querySelector("#save");
+const save_status = document.querySelector("#save-status");
 const to_do = document.querySelector("#to-do");
 const doing = document.querySelector("#doing");
 const done = document.querySelector("#done");
@@ -29,7 +30,7 @@ function markDoing(event) {
     const mark_doing = event.target;
     const card = mark_doing.parentElement;
     doing.append(card);
-    mark_doing.innerHTML = "mark as done"
+    mark_doing.innerHTML = "mark as done";
     mark_doing.addEventListener("click", markDone);
 }
 
@@ -41,7 +42,7 @@ function markDone(event) {
 }
 
 function save() { 
-    console.log("test");
+    save_status.innerHTML = "saving...";
     let cards = [];
     let card_elements = document.querySelectorAll(".card");
     for (let el of card_elements) {
@@ -64,13 +65,11 @@ function save() {
     
 }
 function handle_response() {
-    if (xhttp.readyState === 4) {
-        if (xhttp.status === 200) {
-            if (xhttp.responseText === "success") {
-                console.log("success");
-            } else {
-                console.log("not successful");
-            }
-        }
+    if (xhttp.readyState === 4 && xhttp.status === 200) {
+        setTimeout(() => {save_status.innerHTML = "saved.";}, 1000);
+        setTimeout(() => {save_status.innerHTML = "";}, 2000);
+    } else {
+        console.log("save not successful");
     }
+    
 }

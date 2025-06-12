@@ -10,7 +10,10 @@
     {% if g.user%}
     <header>
         <a href="{{url_for('index')}}">main&#9662;</a>
-        <button id="save">save all</button>
+        <div>
+            <button id="save">save all</button>
+            <p id="save-status"></p>
+        </div>
         <nav>
         <a href="">new page</a>
         <a href="{{url_for('logout')}}">logout</a>

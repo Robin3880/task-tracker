@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect, g, request, session
+from flask import Flask, render_template, url_for, redirect, g, request, session, jsonify
 from flask_session import Session
 from database import get_db, close_db 
 from functools import wraps 
@@ -57,7 +57,7 @@ def save():
             # new cards (new id)
             db.execute('''INSERT INTO cards ('title', 'description', 'status') VALUES (?,?,?)''',(card["title"], card["description"], card["status"]))
     db.commit() 
-    return "success"
+    return jsonify(cards)
     
 @app.route("/register", methods = ["POST","GET"])
 def register():
