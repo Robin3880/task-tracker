@@ -31,10 +31,9 @@ header {
     justify-content: space-between;
     padding: 1em;
     background-color: gray; 
-    height: 4em;
     align-items: center;
 }
-div {
+header div {
     display: flex;
     align-items: center;
 }

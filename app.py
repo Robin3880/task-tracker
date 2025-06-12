@@ -35,7 +35,7 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/save", methods = ["POST","GET"])
+@app.route("/save", methods = ["POST"])
 def save():
     cards = request.get_json()
     db = get_db()
@@ -48,17 +48,34 @@ def save():
         db.execute('''DELETE FROM cards WHERE id = ?''',(id,))
 
     #update all cards that changed 
+    updated_cards = [] 
     for card in cards:
         if card["id"] != "": 
             row = db.execute('SELECT title, description, status FROM cards WHERE id = ?', (card["id"],)).fetchone()
             if row and (row["title"] != card["title"] or row["description"] != card["description"] or row["status"] != card["status"]):
                 db.execute('''UPDATE cards SET title = ?, description = ?, status = ? WHERE id = ?''',(card["title"], card["description"], card["status"], card["id"]))
         else:
-            # new cards (new id)
-            db.execute('''INSERT INTO cards ('title', 'description', 'status') VALUES (?,?,?)''',(card["title"], card["description"], card["status"]))
+            # new cards (no id)
+            cursor = db.execute('''INSERT INTO cards ('title', 'description', 'status') VALUES (?,?,?)''',(card["title"], card["description"], card["status"]))
+            new_id = cursor.lastrowid
+            updated_cards.append({
+                "id": new_id,  
+                "temp_id": card.get("temp_id", ""),
+                "title": card["title"],
+                "description": card["description"],
+                "status": card["status"]
+            })
     db.commit() 
     return jsonify(cards)
-    
+
+
+@app.route("/init", methods=["POST"])
+def init():
+    db = get_db
+    db.execute('''SELECT id FROM cards''')
+    #work in progress
+
+
 @app.route("/register", methods = ["POST","GET"])
 def register():
     form = RegisterForm()
