@@ -5,18 +5,19 @@ const save_status = document.querySelector("#save-status");
 const to_do = document.querySelector("#to-do");
 const doing = document.querySelector("#doing");
 const done = document.querySelector("#done");
-new_button.addEventListener("click", createCard);
+new_button.addEventListener("click", createNewCard);
 save_button.addEventListener("click", save);
+document.addEventListener("DOMContentLoaded", init);
+
 
 function init() {
     xhttp = new XMLHttpRequest();
-    xhttp.addEventListener("readystatechange", handle_init_response, false);
-    xhttp.open("POST", "/save", true);
-    xhttp.setRequestHeader("Content-Type", "application/json");
-    xhttp.send(jsonData);
+    xhttp.addEventListener("readystatechange", handle_response, false);
+    xhttp.open("POST", "/init", true);
+    xhttp.send();
 }
 
-function createCard() {
+function createNewCard() {
     const card = document.createElement("div");
     to_do.insertBefore(card, new_button);
     card.className = "card";
@@ -35,11 +36,42 @@ function createCard() {
     mark_doing.addEventListener("click", markDoing); 
 }
 
+function writeCard(card) {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.id = card.id;
+    let status = document.getElementById(card.status);
+    status.append(div)
+    if (card.status === "to-do") {
+        to_do.insertBefore(div, new_button);
+    }
+    const title = document.createElement("h2");
+    const description = document.createElement("p");
+    const button = document.createElement("button");
+    div.append(title);
+    div.append(description);
+    div.append(button);
+    title.innerHTML = card.title;
+    title.contentEditable = "true";
+    description.innerHTML = card.description;
+    description.contentEditable = "true";
+    if (card.status === "to-do") {
+        button.innerHTML = "mark as doing";
+        button.addEventListener("click", markDoing); 
+    } else if (card.status === "doing") {
+        button.innerHTML = "mark as done";
+        button.addEventListener("click", markDone); 
+    } else {
+        div.removeChild(button);
+    }
+}
+
 function markDoing(event) {
     const mark_doing = event.target;
     const card = mark_doing.parentElement;
     doing.append(card);
     mark_doing.innerHTML = "mark as done";
+    mark_doing.removeEventListener("click", markDoing);
     mark_doing.addEventListener("click", markDone);
 }
 
@@ -56,7 +88,7 @@ function save() {
     let card_elements = document.querySelectorAll(".card");
     for (let el of card_elements) {
         let card = {
-            id: el.id,
+            id: el.id || "",
             tempId: el.dataset.tempId,
             title: el.querySelector("h2").innerText,
             description: el.querySelector("p").innerText,
@@ -74,29 +106,40 @@ function save() {
     xhttp.send(jsonData);
 
 }
+
 function handle_response() {
-    if (xhttp.readyState === 4 && xhttp.status === 200 && xhttp.responseText != "initialised") {
-        setTimeout(() => {save_status.innerHTML = "saved.";}, 1000);
-        setTimeout(() => {save_status.innerHTML = "";}, 2000);
+    if (xhttp.readyState === 4) {
+        if (xhttp.status === 200) {
+            const responseText = xhttp.responseText;
+            if (responseText) {
+                const response = JSON.parse(responseText);
+                if (response.status === "saved") {
+                    setTimeout(() => {save_status.innerHTML = "saved.";}, 1000);
+                    setTimeout(() => {save_status.innerHTML = "";}, 2000);
 
-        const updatedCards = JSON.parse(xhttp.responseText);
+                    for (let updatedCard of response.updated_cards) {
+                        let el = document.querySelector(`[data-tempId="${updatedCard.tempId}"]`); //gets the element with that temp id and then assigns it its new actual id
+                        if (el) {
+                            el.id = updatedCard.id;
+                            el.removeAttribute("data-tempId");
+                        }
+                    };
 
-        for (let updatedCard of updatedCards) {
-            let el = document.querySelector(`[data-tempId="${updatedCard.tempId}"]`); //gets the element with that temp id and then assigns it its new actual id
-            if (el) {
-                el.id = updatedCard.id;
-                el.removeAttribute("data-tempId");
+                } else if (response.status === "initialised") {
+                    for (let card of response.cards) {
+                        writeCard(card);
+                    }
+                }
+            } else {
+                console.warn("Empty response text");
             }
-        };
-
-        let card_elements = document.querySelectorAll(".card");
-        for (let i = 0; i < card_elements.length; i++) {
-            card_elements[i].id = updatedCards[i].id;
+        } else {
+            console.error("Request failed with status:", xhttp.status);
+            console.error("Response text:", xhttp.responseText);
         }
-    } else {
-        console.log("save not successful");
     }
 }
+
 
 function uuid() {
     return Math.random().toString(36).substring(2, 10);

@@ -60,20 +60,28 @@ def save():
             new_id = cursor.lastrowid
             updated_cards.append({
                 "id": new_id,  
-                "temp_id": card.get("temp_id", ""),
+                "tempId": card.get("tempId", ""),
                 "title": card["title"],
                 "description": card["description"],
                 "status": card["status"]
             })
     db.commit() 
-    return jsonify(cards)
+
+    return jsonify({
+        "status": "saved",
+        "updated_cards": updated_cards
+    })
 
 
 @app.route("/init", methods=["POST"])
 def init():
-    db = get_db
-    db.execute('''SELECT id FROM cards''')
-    #work in progress
+    db = get_db()
+    cards = db.execute('''SELECT * FROM cards''').fetchall()
+    cards_as_dicts = [dict(card) for card in cards]
+    return jsonify({
+        "status": "initialised",
+        "cards": cards_as_dicts
+    })
 
 
 @app.route("/register", methods = ["POST","GET"])
