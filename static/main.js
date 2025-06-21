@@ -95,7 +95,7 @@ function save() {
             status: el.parentElement.id
         }
         cards.push(card);
-        console.log(card)
+        console.log(card);
     }
     const jsonData = JSON.stringify(cards);
 
@@ -114,14 +114,18 @@ function handle_response() {
             if (responseText) {
                 const response = JSON.parse(responseText);
                 if (response.status === "saved") {
+                    console.log(response.updated_cards)
                     setTimeout(() => {save_status.innerHTML = "saved.";}, 1000);
                     setTimeout(() => {save_status.innerHTML = "";}, 2000);
 
                     for (let updatedCard of response.updated_cards) {
-                        let el = document.querySelector(`[data-tempId="${updatedCard.tempId}"]`); //gets the element with that temp id and then assigns it its new actual id
+                        let el = document.querySelector(`[data-temp-id="${updatedCard.tempId}"]`); //gets the element with that temp id and then assigns it its new actual id
+                        console.log(el.id)
                         if (el) {
                             el.id = updatedCard.id;
-                            el.removeAttribute("data-tempId");
+                            el.removeAttribute("data-temp-id");
+                            console.log(el.id)
+                            console.log(updatedCard.id)
                         }
                     };
 
