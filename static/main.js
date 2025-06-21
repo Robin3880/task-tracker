@@ -89,16 +89,14 @@ function save() {
     for (let el of card_elements) {
         let card = {
             id: el.id || "",
-            tempId: el.dataset.tempId,
+            tempId: el.dataset.tempId || "",
             title: el.querySelector("h2").innerText,
             description: el.querySelector("p").innerText,
             status: el.parentElement.id
         }
         cards.push(card);
-        console.log(card);
     }
     const jsonData = JSON.stringify(cards);
-
     xhttp = new XMLHttpRequest();
     xhttp.addEventListener("readystatechange", handle_response, false);
     xhttp.open("POST", "/save", true);
@@ -114,18 +112,15 @@ function handle_response() {
             if (responseText) {
                 const response = JSON.parse(responseText);
                 if (response.status === "saved") {
-                    console.log(response.updated_cards)
                     setTimeout(() => {save_status.innerHTML = "saved.";}, 1000);
                     setTimeout(() => {save_status.innerHTML = "";}, 2000);
 
                     for (let updatedCard of response.updated_cards) {
                         let el = document.querySelector(`[data-temp-id="${updatedCard.tempId}"]`); //gets the element with that temp id and then assigns it its new actual id
-                        console.log(el.id)
                         if (el) {
                             el.id = updatedCard.id;
                             el.removeAttribute("data-temp-id");
-                            console.log(el.id)
-                            console.log(updatedCard.id)
+                            delete el.dataset.tempId;
                         }
                     };
 

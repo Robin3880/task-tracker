@@ -41,8 +41,8 @@ def save():
     db = get_db()
 
     #delete all cards no longer there
-    current_ids = set([card["id"] for card in cards if card["id"] != ""])
-    database_ids = set((card["id"] for card in db.execute('''SELECT id FROM cards''').fetchall()))
+    current_ids = set([str(card["id"]) for card in cards if card["id"] != ""])
+    database_ids = set((str(card["id"]) for card in db.execute('''SELECT id FROM cards''').fetchall()))
     difference = database_ids - current_ids
     for id in difference:
         db.execute('''DELETE FROM cards WHERE id = ?''',(id,))
