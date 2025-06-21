@@ -62,3 +62,9 @@ h2 {
     white-space: normal;  /* allow wrapping */
     word-wrap: break-word;
 }
+
+#login a {
+    background-color: black;
+    padding: 0.2em;
+    border-radius: 0.5em;
+}

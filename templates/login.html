@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block main_content %}
-<main>
+<main id="login">
     <form action="" method="POST" novalidate>
         {{form.hidden_tag()}}
 
@@ -17,7 +17,7 @@
         {% endfor%}
         <br />
         {{ form.submit() }}
-        <p>Don't have an account? <a href="{{url_for('register')}}">Register</a></p>
+        <p>Don't have an account? <a href="{{url_for('register')}}" class="button">Register</a></p>
     </form>
 </main>
 {% endblock %}

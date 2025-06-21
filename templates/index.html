@@ -1,17 +1,48 @@
-{% extends "base.html" %}
-{% block main_content %}
-<main>
-    <section id="to-do">
-        <h1>To Do</h1>
-        <button id="new" >+</button>
-    </section>
+<!DOCTYPE html>
+<html lang="en">
 
-    <section id="doing">
-        <h1>Doing</h1>
-    </section>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    <script src="{{url_for('static', filename='main.js')}}" type="module"></script>
+</head>
 
-    <section id="done">
-        <h1>Done</h1>
-    </section>
-</main>
-{% endblock %}
+<body>
+    {% if g.user%}
+    <header>
+        <a href="{{url_for('index')}}">main&#9662;</a>
+        <div>
+            <button id="save">save all</button>
+            <p id="save-status"></p>
+        </div>
+        <nav>
+            <a href="">new page</a>
+            <a href="{{url_for('logout')}}">logout</a>
+        </nav>
+    </header>
+    {% endif %}
+
+
+    <main>
+        <section id="to-do">
+            <h1>To Do</h1>
+            <button id="new">+</button>
+        </section>
+
+        <section id="doing">
+            <h1>Doing</h1>
+        </section>
+
+        <section id="done">
+            <h1>Done</h1>
+        </section>
+    </main>
+
+
+    <footer>
+
+    </footer>
+</body>
+
+</html>
