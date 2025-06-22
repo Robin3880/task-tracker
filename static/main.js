@@ -35,19 +35,22 @@ function createNewCard() {
     card.addEventListener("dragstart", dragstartHandler);
     to_do.insertBefore(card, new_button);
     card.className = "card";
-    card.dataset.tempId = uuid();   //give new cards a temp id before a real one is given by database as this will be used to link it to the new id
+    card.dataset.tempId = uuid();  //give new cards a temp id before they are assigned an actual id by database
+
     const title = document.createElement("h2");
     const description = document.createElement("p");
-    const mark_doing = document.createElement("button");
-    card.append(title);
-    card.append(description);
-    card.append(mark_doing);
+    const button = document.createElement("button");
+
     title.innerHTML = "test";
     title.contentEditable = "true";
+
     description.innerHTML = "description";
     description.contentEditable = "true";
-    mark_doing.innerHTML = "mark as doing";
-    mark_doing.addEventListener("click", markDoing);
+
+    button.innerHTML = "mark as doing";
+    button.addEventListener("click", () => move(doing, card));
+
+    card.append(title, description, button);
 }
 
 function writeCard(card) {
@@ -56,47 +59,35 @@ function writeCard(card) {
     div.addEventListener("dragstart", dragstartHandler);
     div.className = "card";
     div.id = card.id;
-    let status = document.getElementById(card.status);
-    status.append(div)
+
     if (card.status === "to-do") {
         to_do.insertBefore(div, new_button);
+    } else {
+        document.getElementById(card.status).append(div);
     }
+
     const title = document.createElement("h2");
-    const description = document.createElement("p");
-    const button = document.createElement("button");
-    div.append(title);
-    div.append(description);
-    div.append(button);
     title.innerHTML = card.title;
     title.contentEditable = "true";
+
+    const description = document.createElement("p");
     description.innerHTML = card.description;
     description.contentEditable = "true";
+
+    const button = document.createElement("button");
+
     if (card.status === "to-do") {
         button.innerHTML = "mark as doing";
-        button.addEventListener("click", markDoing);
+        button.addEventListener("click", () => move(doing, div));
     } else if (card.status === "doing") {
         button.innerHTML = "mark as done";
-        button.addEventListener("click", markDone);
-    } else {
-        div.removeChild(button);
+        button.addEventListener("click", () => move(done, div));
     }
+
+    div.append(title, description, button);
 }
 
-function markDoing(event) {
-    const mark_doing = event.target;
-    const card = mark_doing.parentElement;
-    doing.append(card);
-    mark_doing.innerHTML = "mark as done";
-    mark_doing.removeEventListener("click", markDoing);
-    mark_doing.addEventListener("click", markDone);
-}
 
-function markDone(event) {
-    const mark_done = event.target;
-    const card = mark_done.parentElement;
-    done.append(card);
-    card.removeChild(mark_done);
-}
 
 function save() {
     save_status.innerHTML = "saving...";
@@ -183,7 +174,7 @@ function dropHandler(ev) {
     if (el === null) {
         el = document.querySelector(`[data-temp-id="${elementId}"]`);
     }
-    
+
     const target = document.getElementById(ev.target.id);
     move(target, el);
 }
@@ -193,26 +184,29 @@ function move(target, el) {
         doing.append(el);
         if (el.lastElementChild.tagName === "BUTTON") {
             el.lastElementChild.innerHTML = "mark as done";
+            el.lastElementChild.onclick = () => move(done, el);
         } else {
             const mark_done = document.createElement("button");
-            el.append(mark_done);
             mark_done.innerHTML = "mark as done";
-            mark_done.addEventListener("click", markDone);
+            mark_done.addEventListener("click", () => move(done, el));
+            el.append(mark_done);
         }
     } else if (target.id === "to-do") {
         to_do.insertBefore(el, new_button);
         if (el.lastElementChild.tagName === "BUTTON") {
             el.lastElementChild.innerHTML = "mark as doing";
+            el.lastElementChild.onclick = () => move(doing, el);
         } else {
             const mark_doing = document.createElement("button");
-            el.append(mark_doing);
             mark_doing.innerHTML = "mark as doing";
-            mark_doing.addEventListener("click", markDoing);
+            mark_doing.addEventListener("click", () => move(doing, el));
+            el.append(mark_doing);
         }
     } else if (target.id === "done") {
         done.append(el);
-        if (el.lastElementChild.tagName === "BUTTON") {
-            el.removeChild(el.lastElementChild);
+        const button = el.querySelector("button");
+        if (button) {
+            el.removeChild(button);
         }
     }
     save();
