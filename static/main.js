@@ -31,8 +31,6 @@ function init() {
 
 function createNewCard() {
     const card = document.createElement("div");
-    card.draggable = true;
-    card.addEventListener("dragstart", dragstartHandler);
     to_do.insertBefore(card, new_button);
     card.className = "card";
     card.dataset.tempId = uuid();  //give new cards a temp id before they are assigned an actual id by database
@@ -40,6 +38,7 @@ function createNewCard() {
     const title = document.createElement("h2");
     const description = document.createElement("p");
     const button = document.createElement("button");
+    const dragHandle = document.createElement("div");
 
     title.innerHTML = "test";
     title.contentEditable = "true";
@@ -47,15 +46,19 @@ function createNewCard() {
     description.innerHTML = "description";
     description.contentEditable = "true";
 
+    dragHandle.innerHTML = "⋮⋮";
+    dragHandle.className = "drag-handle";
+    dragHandle.draggable = true;
+    dragHandle.addEventListener("dragstart", dragstartHandler);
+
     button.innerHTML = "mark as doing";
     button.addEventListener("click", () => move(doing, card));
 
-    card.append(title, description, button);
+    card.append(title, description, dragHandle, button);
 }
 
 function writeCard(card) {
     const div = document.createElement("div");
-    div.draggable = true;
     div.addEventListener("dragstart", dragstartHandler);
     div.className = "card";
     div.id = card.id;
@@ -76,6 +79,12 @@ function writeCard(card) {
 
     const button = document.createElement("button");
 
+    const dragHandle = document.createElement("div");
+    dragHandle.innerHTML = "⋮⋮";
+    dragHandle.className = "drag-handle";
+    dragHandle.draggable = true;
+    dragHandle.addEventListener("dragstart", dragstartHandler);
+
     if (card.status === "to-do") {
         button.innerHTML = "mark as doing";
         button.addEventListener("click", () => move(doing, div));
@@ -84,7 +93,7 @@ function writeCard(card) {
         button.addEventListener("click", () => move(done, div));
     }
 
-    div.append(title, description, button);
+    div.append(title, description,dragHandle, button);
 }
 
 
@@ -153,13 +162,15 @@ function uuid() {
 
 
 function dragstartHandler(ev) {
+    const card = ev.target.parentElement
     ev.dataTransfer.effectAllowed = "move";
-
-    if (ev.target.id) {
-        ev.dataTransfer.setData("text/plain", ev.target.id);
+    
+    if (card.id) {
+        ev.dataTransfer.setData("text/plain", card.id);
     } else {
-        ev.dataTransfer.setData("text/plain", ev.target.dataset.tempId);
+        ev.dataTransfer.setData("text/plain", card.dataset.tempId);
     }
+    ev.dataTransfer.setDragImage(card, 0, 0);
 }
 
 function dragoverHandler(ev) {

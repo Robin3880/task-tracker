@@ -49,12 +49,28 @@ input {
 }
 
 .card {
+    position: relative; 
     border-radius: 0.5em;
     background-color: white;
     padding: 1em;
     width: 20em;
     margin-bottom: 0.5em;
 }
+
+.drag-handle {
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+    cursor: grab;
+    font-size: 1.5em;
+    user-select: none;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 h2 {
     margin: 0;
 }
@@ -67,4 +83,12 @@ h2 {
     background-color: black;
     padding: 0.2em;
     border-radius: 0.5em;
+}
+
+.drag-handle {
+    cursor: pointer;
+}
+
+#save-status {
+    height: 1.5em;
 }
