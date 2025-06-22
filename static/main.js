@@ -1,12 +1,24 @@
 let xhttp;
+
 const new_button = document.querySelector("#new");
-const save_button = document.querySelector("#save");
-const save_status = document.querySelector("#save-status");
-const to_do = document.querySelector("#to-do");
-const doing = document.querySelector("#doing");
-const done = document.querySelector("#done");
 new_button.addEventListener("click", createNewCard);
+
+const save_button = document.querySelector("#save");
 save_button.addEventListener("click", save);
+const save_status = document.querySelector("#save-status");
+
+const to_do = document.querySelector("#to-do");
+to_do.addEventListener("dragover", dragoverHandler);
+to_do.addEventListener("drop", dropHandler);
+
+const doing = document.querySelector("#doing");
+doing.addEventListener("dragover", dragoverHandler);
+doing.addEventListener("drop", dropHandler);
+
+const done = document.querySelector("#done");
+done.addEventListener("dragover", dragoverHandler);
+done.addEventListener("drop", dropHandler);
+
 document.addEventListener("DOMContentLoaded", init);
 
 
@@ -19,6 +31,8 @@ function init() {
 
 function createNewCard() {
     const card = document.createElement("div");
+    card.draggable = true;
+    card.addEventListener("dragstart", dragstartHandler);
     to_do.insertBefore(card, new_button);
     card.className = "card";
     card.dataset.tempId = uuid();   //give new cards a temp id before a real one is given by database as this will be used to link it to the new id
@@ -33,11 +47,13 @@ function createNewCard() {
     description.innerHTML = "description";
     description.contentEditable = "true";
     mark_doing.innerHTML = "mark as doing";
-    mark_doing.addEventListener("click", markDoing); 
+    mark_doing.addEventListener("click", markDoing);
 }
 
 function writeCard(card) {
     const div = document.createElement("div");
+    div.draggable = true;
+    div.addEventListener("dragstart", dragstartHandler);
     div.className = "card";
     div.id = card.id;
     let status = document.getElementById(card.status);
@@ -57,10 +73,10 @@ function writeCard(card) {
     description.contentEditable = "true";
     if (card.status === "to-do") {
         button.innerHTML = "mark as doing";
-        button.addEventListener("click", markDoing); 
+        button.addEventListener("click", markDoing);
     } else if (card.status === "doing") {
         button.innerHTML = "mark as done";
-        button.addEventListener("click", markDone); 
+        button.addEventListener("click", markDone);
     } else {
         div.removeChild(button);
     }
@@ -82,7 +98,7 @@ function markDone(event) {
     card.removeChild(mark_done);
 }
 
-function save() { 
+function save() {
     save_status.innerHTML = "saving...";
     let cards = [];
     let card_elements = document.querySelectorAll(".card");
@@ -112,8 +128,8 @@ function handle_response() {
             if (responseText) {
                 const response = JSON.parse(responseText);
                 if (response.status === "saved") {
-                    setTimeout(() => {save_status.innerHTML = "saved.";}, 1000);
-                    setTimeout(() => {save_status.innerHTML = "";}, 2000);
+                    setTimeout(() => { save_status.innerHTML = "saved."; }, 250);
+                    setTimeout(() => { save_status.innerHTML = ""; }, 400);
 
                     for (let updatedCard of response.updated_cards) {
                         let el = document.querySelector(`[data-temp-id="${updatedCard.tempId}"]`); //gets the element with that temp id and then assigns it its new actual id
@@ -142,4 +158,62 @@ function handle_response() {
 
 function uuid() {
     return Math.random().toString(36).substring(2, 10);
+}
+
+
+function dragstartHandler(ev) {
+    ev.dataTransfer.effectAllowed = "move";
+
+    if (ev.target.id) {
+        ev.dataTransfer.setData("text/plain", ev.target.id);
+    } else {
+        ev.dataTransfer.setData("text/plain", ev.target.dataset.tempId);
+    }
+}
+
+function dragoverHandler(ev) {
+    ev.preventDefault();
+    ev.dataTransfer.dropEffect = "move";
+}
+
+function dropHandler(ev) {
+    ev.preventDefault();
+    const elementId = ev.dataTransfer.getData("text/plain");
+    let el = document.getElementById(elementId);
+    if (el === null) {
+        el = document.querySelector(`[data-temp-id="${elementId}"]`);
+    }
+    
+    const target = document.getElementById(ev.target.id);
+    move(target, el);
+}
+
+function move(target, el) {
+    if (target.id === "doing") {
+        doing.append(el);
+        if (el.lastElementChild.tagName === "BUTTON") {
+            el.lastElementChild.innerHTML = "mark as done";
+        } else {
+            const mark_done = document.createElement("button");
+            el.append(mark_done);
+            mark_done.innerHTML = "mark as done";
+            mark_done.addEventListener("click", markDone);
+        }
+    } else if (target.id === "to-do") {
+        to_do.insertBefore(el, new_button);
+        if (el.lastElementChild.tagName === "BUTTON") {
+            el.lastElementChild.innerHTML = "mark as doing";
+        } else {
+            const mark_doing = document.createElement("button");
+            el.append(mark_doing);
+            mark_doing.innerHTML = "mark as doing";
+            mark_doing.addEventListener("click", markDoing);
+        }
+    } else if (target.id === "done") {
+        done.append(el);
+        if (el.lastElementChild.tagName === "BUTTON") {
+            el.removeChild(el.lastElementChild);
+        }
+    }
+    save();
 }
