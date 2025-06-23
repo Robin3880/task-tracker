@@ -37,7 +37,6 @@ function createNewCard() {
 
     const title = document.createElement("h2");
     const description = document.createElement("p");
-    const button = document.createElement("button");
     const dragHandle = document.createElement("div");
 
     title.innerHTML = "test";
@@ -51,10 +50,7 @@ function createNewCard() {
     dragHandle.draggable = true;
     dragHandle.addEventListener("dragstart", dragstartHandler);
 
-    button.innerHTML = "mark as doing";
-    button.addEventListener("click", () => move(doing, card));
-
-    card.append(title, description, dragHandle, button);
+    card.append(title, description, dragHandle);
 }
 
 function writeCard(card) {
@@ -77,23 +73,13 @@ function writeCard(card) {
     description.innerHTML = card.description;
     description.contentEditable = "true";
 
-    const button = document.createElement("button");
-
     const dragHandle = document.createElement("div");
     dragHandle.innerHTML = "⋮⋮";
     dragHandle.className = "drag-handle";
     dragHandle.draggable = true;
     dragHandle.addEventListener("dragstart", dragstartHandler);
 
-    if (card.status === "to-do") {
-        button.innerHTML = "mark as doing";
-        button.addEventListener("click", () => move(doing, div));
-    } else if (card.status === "doing") {
-        button.innerHTML = "mark as done";
-        button.addEventListener("click", () => move(done, div));
-    }
-
-    div.append(title, description,dragHandle, button);
+    div.append(title, description,dragHandle);
 }
 
 
@@ -193,32 +179,10 @@ function dropHandler(ev) {
 function move(target, el) {
     if (target.id === "doing") {
         doing.append(el);
-        if (el.lastElementChild.tagName === "BUTTON") {
-            el.lastElementChild.innerHTML = "mark as done";
-            el.lastElementChild.onclick = () => move(done, el);
-        } else {
-            const mark_done = document.createElement("button");
-            mark_done.innerHTML = "mark as done";
-            mark_done.addEventListener("click", () => move(done, el));
-            el.append(mark_done);
-        }
     } else if (target.id === "to-do") {
         to_do.insertBefore(el, new_button);
-        if (el.lastElementChild.tagName === "BUTTON") {
-            el.lastElementChild.innerHTML = "mark as doing";
-            el.lastElementChild.onclick = () => move(doing, el);
-        } else {
-            const mark_doing = document.createElement("button");
-            mark_doing.innerHTML = "mark as doing";
-            mark_doing.addEventListener("click", () => move(doing, el));
-            el.append(mark_doing);
-        }
     } else if (target.id === "done") {
         done.append(el);
-        const button = el.querySelector("button");
-        if (button) {
-            el.removeChild(button);
-        }
     }
     save();
 }
