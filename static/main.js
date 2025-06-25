@@ -30,58 +30,73 @@ function init() {
 }
 
 function createNewCard() {
-    const card = document.createElement("div");
-    to_do.insertBefore(card, new_button);
-    card.className = "card";
-    card.dataset.tempId = uuid();  //give new cards a temp id before they are assigned an actual id by database
+    const cardContainer = document.createElement("div");
+    cardContainer.className = "card-container";
+    cardContainer.dataset.tempId = uuid();  //give new cards a temp id before they are assigned an actual id by database
+
+    const cardContent = document.createElement("div");
+    cardContent.className = "card";
+    cardContent.addEventListener("dragstart", dragstartHandler);
+
+    const deleteIcon = document.createElement("img");
+    deleteIcon.src = "/static/delete_red.png";
+    deleteIcon.className = "delete";
+    deleteIcon.alt = "Delete card";
 
     const title = document.createElement("h2");
-    const description = document.createElement("p");
-    const dragHandle = document.createElement("div");
-
     title.innerHTML = "test";
-    title.contentEditable = "true";
+    title.contentEditable = true;
 
+    const description = document.createElement("p");
     description.innerHTML = "description";
-    description.contentEditable = "true";
+    description.contentEditable = true;
 
+    const dragHandle = document.createElement("div");
+    dragHandle.draggable = true
     dragHandle.innerHTML = "⋮⋮";
     dragHandle.className = "drag-handle";
-    dragHandle.draggable = true;
-    dragHandle.addEventListener("dragstart", dragstartHandler);
 
-    card.append(title, description, dragHandle);
+    cardContent.append(title, description, dragHandle);
+    cardContainer.append(cardContent, deleteIcon);
+    to_do.insertBefore(cardContainer, new_button);
 }
 
 function writeCard(card) {
-    const div = document.createElement("div");
-    div.addEventListener("dragstart", dragstartHandler);
-    div.className = "card";
-    div.id = card.id;
+    const cardContainer = document.createElement("div");
+    cardContainer.className = "card-container";
+    cardContainer.id = card.id;
 
-    if (card.status === "to-do") {
-        to_do.insertBefore(div, new_button);
-    } else {
-        document.getElementById(card.status).append(div);
-    }
+    const cardContent = document.createElement("div");
+    cardContent.className = "card";
+    cardContent.addEventListener("dragstart", dragstartHandler);
+
+    const deleteIcon = document.createElement("img");
+    deleteIcon.src = "/static/delete_red.png";
+    deleteIcon.className = "delete";
+    deleteIcon.alt = "Delete card";
 
     const title = document.createElement("h2");
     title.innerHTML = card.title;
-    title.contentEditable = "true";
+    title.contentEditable = true;
 
     const description = document.createElement("p");
     description.innerHTML = card.description;
-    description.contentEditable = "true";
+    description.contentEditable = true;
 
     const dragHandle = document.createElement("div");
     dragHandle.innerHTML = "⋮⋮";
     dragHandle.className = "drag-handle";
-    dragHandle.draggable = true;
-    dragHandle.addEventListener("dragstart", dragstartHandler);
+    dragHandle.draggable = true
 
-    div.append(title, description,dragHandle);
+    cardContent.append(title, description, dragHandle);
+    cardContainer.append(cardContent, deleteIcon);
+
+    if (card.status === "to-do") {
+        to_do.insertBefore(cardContainer, new_button);
+    } else {
+        document.getElementById(card.status).append(cardContainer);
+    }
 }
-
 
 
 function save() {
@@ -94,7 +109,7 @@ function save() {
             tempId: el.dataset.tempId || "",
             title: el.querySelector("h2").innerText,
             description: el.querySelector("p").innerText,
-            status: el.parentElement.id
+            status: el.parentElement.parentElement.id
         }
         cards.push(card);
     }
@@ -148,15 +163,15 @@ function uuid() {
 
 
 function dragstartHandler(ev) {
-    const card = ev.target.parentElement
+    const cardContainer = ev.target.closest(".card-container");
     ev.dataTransfer.effectAllowed = "move";
     
-    if (card.id) {
-        ev.dataTransfer.setData("text/plain", card.id);
+    if (cardContainer.id) {
+        ev.dataTransfer.setData("text/plain", cardContainer.id);
     } else {
-        ev.dataTransfer.setData("text/plain", card.dataset.tempId);
+        ev.dataTransfer.setData("text/plain", cardContainer.dataset.tempId);
     }
-    ev.dataTransfer.setDragImage(card, 0, 0);
+    ev.dataTransfer.setDragImage(cardContainer, 0, 0);
 }
 
 function dragoverHandler(ev) {

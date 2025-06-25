@@ -61,9 +61,11 @@ a {
 nav a {
     margin-left: 2em;
 }
-input {
-    display: block
+.delete {
+    display: block;
+    cursor: pointer;
 }
+
 
 .card {
     position: relative; 
@@ -84,14 +86,39 @@ input {
     position: absolute;
     top: 0.5em;
     right: 0.5em;
-    cursor: grab;
+    cursor: pointer;
     font-size: 1.5em;
-    user-select: none;
     width: 48px;
     height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.card-container {
+    position: relative;
+    width: 20em;
+    margin-bottom: 0.5em;
+}
+
+.delete {
+    padding: 0.2em;
+    position: absolute;
+    width: 1.2em;
+    height: 1.2em;
+    top: 0em;    
+    right: -4.5em;   
+    cursor: pointer;
+    background: #fff; 
+    border: 1px solid #eee;
+    border-radius: 50%; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+#new {
+    font-size: 1em;
+    background-color: #ffffff;
+    border-radius: 0.5em;
 }
 
 h2 {
@@ -108,9 +135,6 @@ h2 {
     border-radius: 0.5em;
 }
 
-.drag-handle {
-    cursor: pointer;
-}
 
 #save-status {
     display: inline-block;
