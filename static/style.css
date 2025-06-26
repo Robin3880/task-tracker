@@ -51,16 +51,34 @@ header div {
     justify-content: center; 
     gap: 0.5em;
 }
-header nav {
+
+#logout {
     justify-self: end;
 }
+
+#login, #register {
+    grid-column: 3;
+    justify-self: end;
+}
+
+#register-form, #login-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    padding: 2em;
+    border: solid black 0.1em;
+    border-radius: 0.2em;
+    margin-bottom: 5em;
+}
+
 a {
     color: white;
     text-decoration: none;
 }
-nav a {
-    margin-left: 2em;
-}
+
 .delete {
     display: block;
     cursor: pointer;
@@ -129,7 +147,7 @@ h2 {
     word-wrap: break-word;
 }
 
-#login a {
+#login-form a, #register-form a {
     background-color: black;
     padding: 0.2em;
     border-radius: 0.5em;

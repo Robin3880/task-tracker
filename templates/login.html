@@ -1,23 +1,37 @@
-{% extends "base.html" %}
-{% block main_content %}
-<main id="login">
-    <form action="" method="POST" novalidate>
-        {{form.hidden_tag()}}
+<!DOCTYPE html>
+<html lang="en">
 
-        {{ form.username.label }}
-        {{ form.username() }}
-        {% for error in form.username.errors %}
-        {{ error }}
-        {% endfor%}
-        <br />
-        {{ form.password.label }}
-        {{ form.password() }}
-        {% for error in form.password.errors %}
-        {{ error }}
-        {% endfor%}
-        <br />
-        {{ form.submit() }}
-        <p>Don't have an account? <a href="{{url_for('register')}}" class="button">Register</a></p>
-    </form>
-</main>
-{% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+</head>
+
+<body>
+    <header>
+        <a href="{{url_for('index')}}">to-do project</a>
+        <a href="{{url_for('register')}}" id="register">register</a>
+    </header>
+
+    <main id="login-form">
+        <form action="" method="POST" novalidate>
+            {{form.hidden_tag()}}
+
+            {{ form.username.label }}
+            {{ form.username() }}
+            {% for error in form.username.errors %}
+            {{ error }}
+            {% endfor%}
+            <br />
+            {{ form.password.label }}
+            {{ form.password() }}
+            {% for error in form.password.errors %}
+            {{ error }}
+            {% endfor%}
+            <br />
+            {{ form.submit() }}
+            <p>Don't have an account? <a href="{{url_for('register')}}" class="button">Register</a></p>
+        </form>
+    </main>
+</body>
+</html>

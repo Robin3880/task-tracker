@@ -11,15 +11,12 @@
 <body>
     {% if g.user%}
     <header>
-        <a href="{{url_for('index')}}">main&#9662;</a>
+        <a href="{{url_for('index')}}">to-do project</a>
         <div>
             <button id="save">save all</button>
             <p id="save-status"></p>
         </div>
-        <nav>
-            <a href="">new page</a>
-            <a href="{{url_for('logout')}}">logout</a>
-        </nav>
+        <a href="{{url_for('logout')}}" id="logout">logout</a>
     </header>
     {% endif %}
 
@@ -38,11 +35,6 @@
             <h1>Done</h1>
         </section>
     </main>
-
-
-    <footer>
-
-    </footer>
 </body>
 
 </html>

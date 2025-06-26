@@ -1,28 +1,45 @@
-{% extends "base.html" %}
-{% block main_content %}
-<main>
-    <form action="" method="POST" novalidate>
-        {{form.hidden_tag()}}
+<!DOCTYPE html>
+<html lang="en">
 
-        {{ form.username.label }}
-        {{ form.username() }}
-        {% for error in form.username.errors %}
-        {{ error }}
-        {% endfor%}
-        <br />
-        {{ form.password1.label }}
-        {{ form.password1() }}
-        {% for error in form.password1.errors %}
-        {{ error }}
-        {% endfor%}
-        <br />
-        {{ form.password2.label }}
-        {{ form.password2() }}
-        {% for error in form.password2.errors %}
-        {{ error }}
-        {% endfor%}
-        <br />
-        {{ form.submit() }}
-    </form>
-</main>
-{% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+</head>
+
+<body>
+    <header>
+        <a href="{{url_for('index')}}">to-do project</a>
+        <a href="{{url_for('login')}}" id="login">login</a>
+    </header>
+
+
+    <main id="register-form">
+        <form action="" method="POST" novalidate>
+            {{form.hidden_tag()}}
+
+            {{ form.username.label }}
+            {{ form.username() }}
+            {% for error in form.username.errors %}
+            {{ error }}
+            {% endfor%}
+            <br />
+            {{ form.password1.label }}
+            {{ form.password1() }}
+            {% for error in form.password1.errors %}
+            {{ error }}
+            {% endfor%}
+            <br />
+            {{ form.password2.label }}
+            {{ form.password2() }}
+            {% for error in form.password2.errors %}
+            {{ error }}
+            {% endfor%}
+            <br />
+            {{ form.submit() }}
+            <p>Already have an account? <a href="{{url_for('login')}}" class="button">login</a></p>
+        </form>
+    </main>
+</body>
+
+</html>

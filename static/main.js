@@ -42,6 +42,7 @@ function createNewCard() {
     deleteIcon.src = "/static/delete_red.png";
     deleteIcon.className = "delete";
     deleteIcon.alt = "Delete card";
+    deleteIcon.addEventListener("click", deleteCard);
 
     const title = document.createElement("h2");
     title.innerHTML = "test";
@@ -74,6 +75,7 @@ function writeCard(card) {
     deleteIcon.src = "/static/delete_red.png";
     deleteIcon.className = "delete";
     deleteIcon.alt = "Delete card";
+    deleteIcon.addEventListener("click", deleteCard)
 
     const title = document.createElement("h2");
     title.innerHTML = card.title;
@@ -120,6 +122,10 @@ function save() {
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send(jsonData);
 
+}
+
+function deleteCard() {
+    ////do 
 }
 
 function handle_response() {
