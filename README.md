@@ -30,3 +30,6 @@ flask run
 5. Access the application:
 
 Open your web browser and go to http://localhost:5000 to use the Task Tracker.
+
+## Preview
+![App Preview](static/preview.png)
