@@ -42,7 +42,7 @@ function createNewCard() {
     deleteIcon.src = "/static/delete_red.png";
     deleteIcon.className = "delete";
     deleteIcon.alt = "Delete card";
-    deleteIcon.addEventListener("click", deleteCard);
+    deleteIcon.addEventListener("click", () => deleteCard(cardContainer));
 
     const title = document.createElement("h2");
     title.innerHTML = "test";
@@ -75,7 +75,7 @@ function writeCard(card) {
     deleteIcon.src = "/static/delete_red.png";
     deleteIcon.className = "delete";
     deleteIcon.alt = "Delete card";
-    deleteIcon.addEventListener("click", deleteCard)
+    deleteIcon.addEventListener("click", () => deleteCard(cardContainer));
 
     const title = document.createElement("h2");
     title.innerHTML = card.title;
@@ -124,8 +124,9 @@ function save() {
 
 }
 
-function deleteCard() {
-    ////do 
+function deleteCard(cardContainer) {
+    cardContainer.remove();
+    save();
 }
 
 function handle_response() {

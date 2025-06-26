@@ -72,7 +72,6 @@ def save():
         "updated_cards": updated_cards
     })
 
-
 @app.route("/init", methods=["POST"])
 def init():
     db = get_db()
