@@ -142,7 +142,7 @@ a {
 h2 {
     margin: 0;
 }
-.card p {
+.card p, .card h2 {
     white-space: normal;  /* allow wrapping */
     word-wrap: break-word;
 }
